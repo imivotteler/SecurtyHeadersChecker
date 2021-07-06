@@ -1,0 +1,1 @@
+# SecurityHeaders.com Cloudflare checker
