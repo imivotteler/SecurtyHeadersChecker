@@ -10,7 +10,7 @@ from slack_sdk.webhook import WebhookClient
 # Add scores to a DB (Dynamo? Mongo?)
 # Only alert if the score gets worse than it was last time the check ran
 # Message owning team alerting channel
-# Get Slack Webhook URL from environment
+
 
 # obtain environment vars for Cloudflare credentials
 global headers
@@ -65,7 +65,6 @@ def post_to_slack_bulk(report):
     '''
     Post a list of sites and their scores to our Slack alerting channel
     '''
-    # url = "https://hooks.slack.com/services/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"
     url = slack_webhook # set the slack webhook from the environment 
     
     webhook = WebhookClient(url)
