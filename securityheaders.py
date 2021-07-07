@@ -10,6 +10,7 @@ from slack_sdk.webhook import WebhookClient
 # Add scores to a DB (Dynamo? Mongo?)
 # Only alert if the score gets worse than it was last time the check ran
 # Message owning team alerting channel
+# Get Slack Webhook URL from environment
 
 # obtain environment vars for Cloudflare credentials
 global headers
@@ -22,6 +23,16 @@ try:
 except KeyError:
     print("You need to set your Cloudflare auth environment vars first.\nNeeds: CF_EMAIL and CF_KEY.\nEdit and run setup.sh")
     sys.exit()
+
+
+# obtain environment vars for Slack Webhook
+try:
+    slack_webhook = os.environ['CF_WEBHOOK']
+        
+except KeyError:
+    print("You need to set your Slack Webhook URL\nNeeds: CF_WEBHOOK.\nEdit and run setup.sh")
+    sys.exit()
+
 
 def log_results(report_data, current_domain):
     '''
@@ -49,30 +60,14 @@ def good_score_check(score_input):
         print("This site has a bad score. Posting!")
         return False
 
-# def post_to_slack(domain_name, domain_score):
-#     '''
-#     Post an individual site and its score to our Slack alerting channel
-#     '''
-#     url = "https://hooks.slack.com/services/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"
-#     webhook = WebhookClient(url)
-#     response = webhook.send(
-#         text="fallback",
-#         blocks=[
-#             {
-#                 "type": "section",
-#                 "text": {
-#                     "type": "mrkdwn",
-#                     "text": domain_name + ":\nThis site has scored an " + domain_score
-#                 }
-#             }
-#         ]
-#     )
 
 def post_to_slack_bulk(report):
     '''
     Post a list of sites and their scores to our Slack alerting channel
     '''
-    url = "https://hooks.slack.com/services/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"
+    # url = "https://hooks.slack.com/services/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"
+    url = slack_webhook # set the slack webhook from the environment 
+    
     webhook = WebhookClient(url)
     response = webhook.send(
         text="fallback",
